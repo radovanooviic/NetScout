@@ -12,15 +12,15 @@ internal class Program
         {
             case "--help":
                 Console.WriteLine("NetScout --version da bi videli verziju alata");
-                Console.WriteLine("NetScout -ping ip_adress za pingovanje");
-                Console.WriteLine("NetScout -scan ip_adress za trazenje portova");
+                Console.WriteLine("NetScout --ping ip_adress za pingovanje");
+                Console.WriteLine("NetScout --scan ip_adress za trazenje portova");
                 Console.WriteLine("NetScout --dns host za prikazivanje ip adrese hosta");
                 Console.WriteLine("NetScout --dns ip_adress --reverse za prikazivanje imena hosta");
                 break;
             case "--version":
                 Console.WriteLine("NetScout v1.0");
                 break;
-            case "-ping":
+            case "--ping":
                 if (args.Length < 2)
                 {
                     Console.WriteLine("Morate uneti ip adresu!");
@@ -28,7 +28,7 @@ internal class Program
                 }
                 PingCommand.Run(args[1]);
                 break;
-            case "-scan":
+            case "--scan":
                 if (args.Length < 2)
                 {
                     Console.WriteLine("Morate uneti ip adresu!");
