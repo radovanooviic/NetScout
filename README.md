@@ -1,6 +1,6 @@
 # NetScout
 
-A small command-line network toolkit written in C# (.NET). Built as a learning project to explore sockets, ICMP and the `System.Net` namespaces.
+A small command-line network toolkit written in C# (.NET). Built as a learning project to explore sockets, ICMP, DNS and the `System.Net` namespaces.
 
 ## Features
 
@@ -8,8 +8,10 @@ A small command-line network toolkit written in C# (.NET). Built as a learning p
 |---|---|
 | `--help` | Show available commands |
 | `--version` | Show the current version |
-| `--ping <host>` | Send 4 ICMP echo requests and print the results |
-| `--scan <host>` | Scan common TCP ports and list the open ones |
+| `--ping <ip>` | Send 4 ICMP echo requests and print the results |
+| `--scan <ip>` | Scan common TCP ports and list the open ones |
+| `--dns <host>` | Resolve a host name to its IP addresses |
+| `--dns <ip> --reverse` | Reverse lookup: find the host name of an IP address |
 
 ## Requirements
 
@@ -30,14 +32,26 @@ The `--` separates arguments for `dotnet` from arguments for NetScout.
 ## Usage
 
 ```bash
+# Show help
+dotnet run -- --help
+
+# Show version
+dotnet run -- --version
+
 # Ping a host
 dotnet run -- --ping 8.8.8.8
 
 # Scan common ports on your own machine
 dotnet run -- --scan 127.0.0.1
+
+# Resolve a host name to IP addresses
+dotnet run -- --dns google.com
+
+# Reverse lookup (IP to host name)
+dotnet run -- --dns 8.8.8.8 --reverse
 ```
 
-Example output:
+Example output of `--scan`:
 
 ```
 Skeniram 127.0.0.1...
@@ -54,16 +68,23 @@ NetScout performs a simple **TCP connect scan**. For every port in a list of com
 
 Scanned ports: 21, 22, 23, 25, 53, 80, 110, 135, 139, 443, 445, 3306, 3389, 8080.
 
+## How DNS lookup works
+
+`--dns` has two modes:
+
+- **Forward lookup** (`--dns <host>`): returns the IP addresses of a host name.
+- **Reverse lookup** (`--dns <ip> --reverse`): returns the host name of an IP address. Many addresses have no reverse record, in which case no name can be found.
+
 ## Exit codes
 
 | Code | Meaning |
 |---|---|
 | `0` | Success |
-| `1` | Invalid usage or error |
+| `1` | Invalid usage (missing argument or unknown command) |
 
 ## Roadmap
 
-- [ ] `--dns` – resolve host names and IP addresses
+- [x] `--dns` – resolve host names and IP addresses
 - [ ] `--ipconfig` – show local network adapters
 - [ ] `--sweep` – discover live hosts in a subnet
 - [ ] `--traceroute` – show the path to a host
@@ -77,7 +98,8 @@ NetScout/
 ├── Program.cs          # Argument parsing and command routing
 └── Commands/
     ├── PingCommand.cs  # ICMP ping
-    └── ScanCommand.cs  # TCP port scanner
+    ├── ScanCommand.cs  # TCP port scanner
+    └── DnsCommand.cs   # Forward and reverse DNS lookup
 ```
 
 ## Legal notice
