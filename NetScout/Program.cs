@@ -16,6 +16,7 @@ internal class Program
                 Console.WriteLine("NetScout --scan ip_adress za trazenje portova");
                 Console.WriteLine("NetScout --dns host za prikazivanje ip adrese hosta");
                 Console.WriteLine("NetScout --dns ip_adress --reverse za prikazivanje imena hosta");
+                Console.WriteLine("NetScout --ipconfig za config AKTIVNIH adaptera");
                 break;
             case "--version":
                 Console.WriteLine("NetScout v1.0");
@@ -63,6 +64,16 @@ internal class Program
                     {
                         Console.WriteLine("Previse argumenata!");
                     }
+                }
+                break;
+            case "--ipconfig":
+                if(args.Length == 1)
+                {
+                    IpConfigCommand.Run();
+                }
+                else
+                {
+                    Console.WriteLine("Previse argumenata!");
                 }
                 break;
             default:
