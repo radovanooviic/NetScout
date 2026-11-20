@@ -8,15 +8,18 @@ A small command-line network toolkit written in C# (.NET). Built as a learning p
 |---|---|
 | `--help` | Show available commands |
 | `--version` | Show the current version |
-| `--ping <ip>` | Send 4 ICMP echo requests and print the results |
-| `--scan <ip>` | Scan common TCP ports and list the open ones |
+| `--ping <host>` | Send 4 ICMP echo requests and print the results |
+| `--scan <host>` | Scan common TCP ports and list the open ones |
 | `--dns <host>` | Resolve a host name to its IP addresses |
 | `--dns <ip> --reverse` | Reverse lookup: find the host name of an IP address |
+| `--ipconfig` | Show local network adapters (type, status, MAC, IPv4, subnet mask, gateway, DNS) |
 
 ## Requirements
 
-- [.NET SDK](https://dotnet.microsoft.com/download) (8.0 or newer)
+- [.NET SDK](https://dotnet.microsoft.com/download) (the version the project targets, 8.0 or newer)
 - Windows, Linux or macOS
+
+> The repository uses the `.slnx` solution format, which requires a recent .NET SDK (9.0.200 or newer) for `dotnet build` at the repository root. With an older SDK, build the project folder directly: `dotnet build NetScout`.
 
 ## Getting started
 
@@ -24,7 +27,7 @@ A small command-line network toolkit written in C# (.NET). Built as a learning p
 git clone https://github.com/radovanooviic/NetScout.git
 cd NetScout
 dotnet build
-dotnet run -- --help
+dotnet run --project NetScout -- --help
 ```
 
 The `--` separates arguments for `dotnet` from arguments for NetScout.
@@ -33,22 +36,25 @@ The `--` separates arguments for `dotnet` from arguments for NetScout.
 
 ```bash
 # Show help
-dotnet run -- --help
+dotnet run --project NetScout -- --help
 
 # Show version
-dotnet run -- --version
+dotnet run --project NetScout -- --version
 
 # Ping a host
-dotnet run -- --ping 8.8.8.8
+dotnet run --project NetScout -- --ping 8.8.8.8
 
 # Scan common ports on your own machine
-dotnet run -- --scan 127.0.0.1
+dotnet run --project NetScout -- --scan 127.0.0.1
 
 # Resolve a host name to IP addresses
-dotnet run -- --dns google.com
+dotnet run --project NetScout -- --dns google.com
 
 # Reverse lookup (IP to host name)
-dotnet run -- --dns 8.8.8.8 --reverse
+dotnet run --project NetScout -- --dns 8.8.8.8 --reverse
+
+# Show local network adapters
+dotnet run --project NetScout -- --ipconfig
 ```
 
 Example output of `--scan`:
@@ -75,6 +81,18 @@ Scanned ports: 21, 22, 23, 25, 53, 80, 110, 135, 139, 443, 445, 3306, 3389, 8080
 - **Forward lookup** (`--dns <host>`): returns the IP addresses of a host name.
 - **Reverse lookup** (`--dns <ip> --reverse`): returns the host name of an IP address. Many addresses have no reverse record, in which case no name can be found.
 
+## How ipconfig works
+
+`--ipconfig` lists the network adapters of the machine it runs on, similar to the Windows `ipconfig /all` command. For each adapter it shows:
+
+- name, type and operational status
+- MAC address
+- IPv4 address and subnet mask
+- default gateway
+- DNS servers
+
+Unlike the other commands, it takes no arguments, because it reports information about the local computer, not a remote host.
+
 ## Exit codes
 
 | Code | Meaning |
@@ -85,7 +103,7 @@ Scanned ports: 21, 22, 23, 25, 53, 80, 110, 135, 139, 443, 445, 3306, 3389, 8080
 ## Roadmap
 
 - [x] `--dns` – resolve host names and IP addresses
-- [ ] `--ipconfig` – show local network adapters
+- [x] `--ipconfig` – show local network adapters
 - [ ] `--sweep` – discover live hosts in a subnet
 - [ ] `--traceroute` – show the path to a host
 - [ ] Parallel port scanning
@@ -95,11 +113,16 @@ Scanned ports: 21, 22, 23, 25, 53, 80, 110, 135, 139, 443, 445, 3306, 3389, 8080
 
 ```
 NetScout/
-├── Program.cs          # Argument parsing and command routing
-└── Commands/
-    ├── PingCommand.cs  # ICMP ping
-    ├── ScanCommand.cs  # TCP port scanner
-    └── DnsCommand.cs   # Forward and reverse DNS lookup
+├── NetScout.slnx
+├── LICENSE
+├── README.md
+└── NetScout/
+    ├── Program.cs               # Argument parsing and command routing
+    └── Commands/
+        ├── PingCommand.cs       # ICMP ping
+        ├── ScanCommand.cs       # TCP port scanner
+        ├── DnsCommand.cs        # Forward and reverse DNS lookup
+        └── IpConfigCommand.cs   # Local network adapter information
 ```
 
 ## Legal notice
