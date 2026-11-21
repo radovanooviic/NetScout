@@ -43,27 +43,24 @@ internal class Program
                     Console.WriteLine("Morate uneti host name!");
                     Environment.Exit(1);
                 }
-                else
+                else if (args.Length == 2)
                 {
-                    if (args.Length == 2)
+                    DnsCommand.ForwardRun(args[1]);
+                }
+                else if (args.Length == 3)
+                {
+                    if (args[2] == "--reverse")
                     {
-                        DnsCommand.ForwardRun(args[1]);
-                    }
-                    if (args.Length == 3)
-                    {
-                        if (args[2] == "--reverse")
-                        {
-                            DnsCommand.ReverseRun(args[1]);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Nepoznat argument!");
-                        }
+                        DnsCommand.ReverseRun(args[1]);
                     }
                     else
                     {
-                        Console.WriteLine("Previse argumenata!");
+                        Console.WriteLine("Nepoznat argument!");
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Previse argumenata!");
                 }
                 break;
             case "--ipconfig":
